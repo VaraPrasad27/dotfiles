@@ -1,0 +1,46 @@
+* {
+  /* `otf-font-awesome` is required to be installed for icons */
+  /* all: unset; */
+  font-family: "JetBrainsMono Nerd Font Propo", sans-serif;
+  font-size: 13px;
+}
+
+window#waybar {
+  background-color: rgba(0, 0, 0, 0.5);
+  /* border-bottom: 3px solid rgba(100, 114, 125, 0.5); */
+  color: #ffffff;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+}
+
+#workspaces button {
+  margin: 2px 0;
+  padding: 0 2px;
+  font-weight: bold;
+}
+
+#workspaces button.focused,
+#workspaces button.active {
+  background-color: #27c1f5;
+}
+
+#workspaces button.urgent {
+  background-color: #eb4d4b;
+}
+
+#memory,
+#bluetooth,
+#network,
+#battery,
+#custom-power {
+  margin: 2px;
+  padding: 0 5px;
+  background-color: rgb(59, 59, 59);
+  border-radius: 8px;
+}
+
+#battery.charging,
+#battery.plugged {
+  color: #ffffff;
+  background-color: #26a65b;
+}
