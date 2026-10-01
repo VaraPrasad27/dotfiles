@@ -20,8 +20,6 @@ map("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centerd)" })
 
 map("x", "<leader>p", '"_dP', { desc = "Past without yanking" })
 map({ "n", "v" }, "<leader>x", '"_d', { desc = "Delete without yanking" })
-map("n", "<leader>c", '"+y', { desc = "Copy to clipboard" })
-map("n", "<leader>v", '"+p', { desc = "Past from clipboard" })
 
 map("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
 map("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })

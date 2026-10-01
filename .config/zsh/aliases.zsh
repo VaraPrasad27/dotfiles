@@ -11,3 +11,5 @@ alias diff='diff --color=auto'
 alias df='df -h'
 
 alias -- -='cd -'
+
+alias q='exit'
