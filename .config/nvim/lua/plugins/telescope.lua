@@ -11,7 +11,22 @@ return {
 			vim.keymap.set("n", "<leader>ff", function()
 				builtin.find_files({ hidden = true })
 			end, { desc = "Telescope find files" })
-			vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
+			vim.keymap.set("n", "<leader>fg", function()
+				builtin.live_grep({
+					vimgrep_arguments = {
+						"rg",
+						"--color=never",
+						"--no-heading",
+						"--with-filename",
+						"--line-number",
+						"--column",
+						"--smart-case",
+						"--hidden", -- Searches hidden files/folders
+						"--glob",
+						"!**/.git/*", -- Excludes the massive .git folder
+					},
+				})
+			end, { desc = "Telescope live grep" })
 			vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
 			vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
 		end,

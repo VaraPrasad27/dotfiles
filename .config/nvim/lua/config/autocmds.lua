@@ -2,40 +2,52 @@ local augroup = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 
 -- highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
-  group = augroup,
-  callback = function()
-    vim.hl.on_yank()
-  end,
+	group = augroup,
+	callback = function()
+		vim.hl.on_yank()
+	end,
 })
 
 -- return to last cursor postiton
 vim.api.nvim_create_autocmd("BufReadPost", {
-  group = augroup,
-  desc = "Restore last cursor position",
-  callback = function()
-    if vim.o.diff then
-      return
-    end
+	group = augroup,
+	desc = "Restore last cursor position",
+	callback = function()
+		if vim.o.diff then
+			return
+		end
 
-    local last_pos = vim.api.nvim_buf_get_mark(0, '"')
-    local last_line = vim.api.nvim_buf_line_count(0)
+		local last_pos = vim.api.nvim_buf_get_mark(0, '"')
+		local last_line = vim.api.nvim_buf_line_count(0)
 
-    local row = last_pos[1]
-    if row < 1 or row > last_line then
-      return
-    end
+		local row = last_pos[1]
+		if row < 1 or row > last_line then
+			return
+		end
 
-    pcall(vim.api.nvim_win_set_cursor, 0, last_pos)
-  end,
+		pcall(vim.api.nvim_win_set_cursor, 0, last_pos)
+	end,
 })
 
 -- wrap, linebreak and spllcheck on markdown and text files
 vim.api.nvim_create_autocmd("FileType", {
-  group = augroup,
-  pattern = { "markdown", "text", "gitcommit" },
-  callback = function()
-    vim.opt_local.wrap = true
-    vim.opt_local.linebreak = true
-    vim.opt_local.spell = true
-  end,
+	group = augroup,
+	pattern = { "markdown", "text", "gitcommit" },
+	callback = function()
+		vim.opt_local.wrap = true
+		vim.opt_local.linebreak = true
+		vim.opt_local.spell = true
+	end,
+})
+
+-- Automatically start and attach qmlls when opening a QML file
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "qml",
+	callback = function(args)
+		local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/qmlls"
+		vim.lsp.enable("qmlls", {
+			cmd = { mason_bin },
+			root_dir = vim.fs.root(args.buf, { ".qmlls.ini", "qmldir", ".git" }),
+		})
+	end,
 })
