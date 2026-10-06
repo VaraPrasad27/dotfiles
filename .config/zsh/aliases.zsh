@@ -12,4 +12,8 @@ alias df='df -h'
 
 alias -- -='cd -'
 
+alias cdp='cd ~/Projects'
+alias cdd='cd ~/Downloads'
+alias cdg='cd ~/git-repos'
+
 alias q='exit'

@@ -1,5 +1,5 @@
 vim.opt.termguicolors = true
-vim.cmd.colorscheme("catppuccin")
+-- vim.cmd.colorscheme("catppuccin")
 
 vim.opt.number = true -- line number
 -- vim.opt.relativenumber = true -- relative line number
@@ -35,15 +35,13 @@ vim.opt.synmaxcol = 300 -- syntax highlighting limit
 vim.opt.fillchars = { eob = " " } -- hide "~" on empty linse
 
 local undodir = vim.fn.expand("~/.vim/undodir")
-if 
-	vim.fn.isdirectory(undodir) == 0 
-then 
-	vim.fn.mkdir(undodir, "p") 
+if vim.fn.isdirectory(undodir) == 0 then
+	vim.fn.mkdir(undodir, "p")
 end
 
 vim.opt.backup = false -- do not create a backup file
 vim.opt.writebackup = false
-vim.opt.swapfile = false 
+vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.undodir = undodir
 vim.opt.updatetime = 300 -- faster completion
@@ -76,4 +74,21 @@ vim.opt.wildmenu = true -- tab completion
 vim.opt.wildmode = "longest:full,full" -- complete longest common match, full completion list, cycle through with Tab
 vim.opt.diffopt:append("linematch:60") --improve diff display
 vim.opt.redrawtime = 10000 -- increase neovim redraw tolerance
-vim.opt.maxmempattern = 20000 -- increase max memory
+vim.opt.maxmempattern = 20001 -- increase max memory
+
+-- Error
+-- vim.diagnostic.config({ virtual_lines = { current_line = true } })
+vim.diagnostic.config({
+	virtual_text = {
+		spacing = 4,
+		prefix = "■", -- try "●", "▎", or ""
+		source = "if_many", -- show the server name only when several report
+	},
+	signs = true,
+	underline = true,
+	update_in_insert = false, -- don't flash errors while typing
+	severity_sort = true, -- errors above warnings
+	float = { border = "rounded", source = true },
+})
+
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Line diagnostics" })
