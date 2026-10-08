@@ -21,6 +21,13 @@ ShellRoot {
             anchors.topMargin: 2
             anchors.leftMargin: 2
             anchors.rightMargin: 2
+            spacing: 3
+
+            StartMenu {
+                implicitHeight: root.implicitHeight - 2
+                implicitWidth: root.implicitHeight - 2
+                radius: root.implicitHeight
+            }
 
             Workspaces {
                 radius: root.implicitHeight / 2

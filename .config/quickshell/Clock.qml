@@ -1,13 +1,10 @@
 import QtQuick
 import Quickshell
 import QtQuick.Layouts
-import Quickshell.Widgets
 
-WrapperRectangle {
+Rectangle {
     Layout.fillHeight: true
-    leftMargin: 10
-    rightMargin: 10
-    topMargin: 6
+    implicitWidth: lable.implicitWidth + 20
     color: "#252324"
     anchors.centerIn: parent
 
@@ -18,8 +15,10 @@ WrapperRectangle {
     }
 
     Text {
+        id: lable
         text: Qt.formatDateTime(clock.date, "hh:mm")
         color: "#3dd1b0"
+        anchors.centerIn: parent
 
         font {
             family: "SF Mono"
