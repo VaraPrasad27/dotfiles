@@ -3,11 +3,14 @@ import QtQuick.Layouts
 import Quickshell.Networking
 import Quickshell.Widgets
 
-WrapperRectangle {
+Rectangle {
+    Layout.fillHeight: parent
+    implicitWidth: root.implicitWidth
     color: "#252324"
 
     RowLayout {
         id: root
+        anchors.centerIn: parent
         spacing: 6
 
         property var wifiDevice: Networking.devices.values.find(d => d.type === DeviceType.Wifi)
@@ -49,5 +52,7 @@ WrapperRectangle {
                 weight: 500
             }
         }
+        // 
+        // 
     }
 }

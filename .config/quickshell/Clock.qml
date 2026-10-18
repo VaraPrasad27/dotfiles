@@ -16,8 +16,8 @@ Rectangle {
 
     Text {
         id: lable
-        text: Qt.formatDateTime(clock.date, "hh:mm")
-        color: "#3dd1b0"
+        text: Qt.formatDateTime(clock.date, "hh:mm AP")
+        color: "white"
         anchors.centerIn: parent
 
         font {

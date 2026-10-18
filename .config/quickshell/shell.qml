@@ -7,7 +7,7 @@ ShellRoot {
     PanelWindow {
         id: root
 
-        implicitHeight: 30
+        implicitHeight: 28
         color: "transparent"
 
         anchors {
@@ -15,22 +15,30 @@ ShellRoot {
             left: true
             right: true
         }
+        margins {
+            top: 2
+            left: 2
+            right: 2
+        }
 
         RowLayout {
             anchors.fill: parent
-            anchors.topMargin: 2
-            anchors.leftMargin: 2
-            anchors.rightMargin: 2
             spacing: 3
 
             StartMenu {
-                implicitHeight: root.implicitHeight - 2
-                implicitWidth: root.implicitHeight - 2
-                radius: root.implicitHeight
+                implicitHeight: root.implicitHeight
+                implicitWidth: root.implicitHeight
+                radius: root.implicitHeight / 2
             }
 
             Workspaces {
                 radius: root.implicitHeight / 2
+            }
+
+            Active {
+                implicitHeight: root.implicitHeight
+                radius: root.implicitHeight / 2
+                color: "#252324"
             }
 
             Clock {
@@ -39,6 +47,11 @@ ShellRoot {
 
             Item {
                 Layout.fillWidth: true
+            }
+
+            SysTray {
+                implicitWidth: root.implicitHeight
+                radius: root.implicitHeight / 2
             }
 
             WrapperRectangle {
@@ -51,10 +64,25 @@ ShellRoot {
                     spacing: 9
                     Bluetooth {}
                     Volume {}
-                    Network {}
+                    Network {
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: netPop.visible = !netPop.visible
+                        }
+                    }
                     Battery {}
                 }
             }
+            More {
+                implicitHeight: root.implicitHeight
+                implicitWidth: root.implicitHeight
+                radius: root.implicitHeight / 2
+            }
+        }
+
+        NetPopup {
+            id: netPop
+            anchor.window: root
         }
     }
 }
