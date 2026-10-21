@@ -8,6 +8,7 @@ PopupWindow {
 
     anchor.rect.x: anchor.window ? anchor.window.width : 0
     anchor.rect.y: anchor.window ? anchor.window.height + 2 : 0
+    anchor.gravity: Edges.Bottom | Edges.Left
 
     implicitWidth: 500
     implicitHeight: 500

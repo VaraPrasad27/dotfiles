@@ -32,7 +32,7 @@ Rectangle {
             color: Networking.wifiEnabled ? "#e89aa8" : "#5a4d3e"
 
             font {
-                family: "JetBrainsMono Nerd Propo"
+                family: "JetBrainsMono Nerd Font Propo"
                 pixelSize: 13
             }
         }

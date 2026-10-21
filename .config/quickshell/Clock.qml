@@ -2,11 +2,14 @@ import QtQuick
 import Quickshell
 import QtQuick.Layouts
 
-Rectangle {
+FlaredRect {
     Layout.fillHeight: true
     implicitWidth: lable.implicitWidth + 20
     color: "#252324"
-    anchors.centerIn: parent
+    topLeft: "flare"
+    topRight: "flare"
+    bottomLeft: "round"
+    bottomRight: "round"
 
     SystemClock {
         id: clock

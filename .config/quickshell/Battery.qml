@@ -4,7 +4,7 @@ import Quickshell.Widgets
 import Quickshell.Services.UPower
 
 WrapperRectangle {
-    color: "#252325"
+    color: "#252324"
     RowLayout {
         id: root
         spacing: 6

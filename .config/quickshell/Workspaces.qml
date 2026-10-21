@@ -4,7 +4,6 @@ import Quickshell.Hyprland
 import Quickshell.Widgets
 
 WrapperRectangle {
-    Layout.fillHeight: true
     leftMargin: 10
     rightMargin: 10
     color: "#252324"

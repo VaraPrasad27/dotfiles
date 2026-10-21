@@ -22,7 +22,7 @@ Rectangle {
 
                 implicitHeight: act1.implicitHeight
                 implicitWidth: act1.implicitHeight
-                radius: 15
+                radius: act1.implicitHeight / 2
                 color: modelData.activated ? "#45475a" : hover.containsMouse ? "#313244" : "transparent"
 
                 Image {
@@ -30,7 +30,7 @@ Rectangle {
                     width: 22
                     height: 22
                     sourceSize: Qt.size(44, 44)
-                    source: Quickshell.iconPath(item.iconName, "application-x-execuatable")
+                    source: Quickshell.iconPath(item.iconName, "application-x-executable")
                 }
 
                 Rectangle {

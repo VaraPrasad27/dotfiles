@@ -9,7 +9,7 @@ WrapperRectangle {
     RowLayout {
         id: root
         readonly property string icon: {
-            if (!Bluetooth.defaultAdapter.enabled)
+            if (!Bluetooth.defaultAdapter?.enabled)
                 return "󰂲";
             if (Bluetooth.devices.values.some(d => d.connected))
                 return "󰂱";
@@ -18,6 +18,7 @@ WrapperRectangle {
 
         Text {
             text: root.icon
+            font.family: "JetBrainsMono Nerd Font Propo"
             color: "white"
         }
     }

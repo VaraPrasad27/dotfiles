@@ -20,8 +20,7 @@ WrapperRectangle {
             if (!ready)
                 return String.fromCodePoint(0xF0581);
             if (muted)
-                return "Muted";
-
+                return String.fromCodePoint(0xF075F);
             if (vol === 0)
                 return String.fromCodePoint(0xF0581);
             if (vol < 34)

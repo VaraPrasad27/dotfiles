@@ -2,12 +2,19 @@ import QtQuick
 import Quickshell
 import QtQuick.Layouts
 import Quickshell.Widgets
+import Quickshell.Hyprland
 
 ShellRoot {
     PanelWindow {
         id: root
 
-        implicitHeight: 28
+        readonly property int barHeight: 30
+
+        implicitHeight: barHeight
+        exclusiveZone: barHeight
+        mask: Region {
+            item: row
+        }
         color: "transparent"
 
         anchors {
@@ -16,13 +23,20 @@ ShellRoot {
             right: true
         }
         margins {
-            top: 2
-            left: 2
-            right: 2
+            top: 0
+            left: 0
+            right: 0
         }
 
         RowLayout {
-            anchors.fill: parent
+            id: row
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+            }
+            height: root.barHeight
             spacing: 3
 
             StartMenu {
@@ -32,16 +46,18 @@ ShellRoot {
             }
 
             Workspaces {
+                implicitHeight: root.implicitHeight - 2
                 radius: root.implicitHeight / 2
             }
 
             Active {
-                implicitHeight: root.implicitHeight
+                implicitHeight: root.implicitHeight - 2
                 radius: root.implicitHeight / 2
                 color: "#252324"
             }
 
             Clock {
+                anchors.centerIn: parent
                 radius: root.implicitHeight / 2
             }
 
@@ -50,12 +66,19 @@ ShellRoot {
             }
 
             SysTray {
-                implicitWidth: root.implicitHeight
+                id: trayBtn
+                implicitHeight: root.implicitHeight - 2
+                implicitWidth: root.implicitHeight - 2
                 radius: root.implicitHeight / 2
+                open: trayPop.visible
+                onClicked: {
+                    netPop.visible = false;
+                    trayPop.visible = !trayPop.visible;
+                }
             }
 
             WrapperRectangle {
-                Layout.fillHeight: true
+                implicitHeight: root.implicitHeight - 2
                 leftMargin: 10
                 rightMargin: 10
                 radius: root.implicitHeight / 2
@@ -67,7 +90,10 @@ ShellRoot {
                     Network {
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: netPop.visible = !netPop.visible
+                            onClicked: {
+                                trayPop.visible = false;
+                                netPop.visible = !netPop.visible;
+                            }
                         }
                     }
                     Battery {}
@@ -83,6 +109,42 @@ ShellRoot {
         NetPopup {
             id: netPop
             anchor.window: root
+            onVisibleChanged: root.syncGrab()
+        }
+
+        SysTrayPopup {
+            id: trayPop
+            anchor.window: root
+            target: trayBtn
+            onVisibleChanged: root.syncGrab()
+            onOpenMenusChanged: if (openMenus === 0)
+                root.syncGrab()
+        }
+
+        HyprlandFocusGrab {
+            id: grab
+            windows: [root, trayPop, netPop]   // clicks on any of these don't count as "outside"
+
+            onCleared: {
+                if (trayPop.openMenus > 0)     // a tray right-click menu is up, so leave things alone
+                    return;
+                trayPop.visible = false;
+                netPop.visible = false;
+            }
+        }
+        Timer {
+            id: grabTimer
+            interval: 50
+            onTriggered: grab.active = trayPop.visible || netPop.visible
+        }
+
+        function syncGrab() {
+            if (trayPop.visible || netPop.visible) {
+                grabTimer.restart();     // give the popup's window time to exist
+            } else {
+                grabTimer.stop();
+                grab.active = false;
+            }
         }
     }
 }
