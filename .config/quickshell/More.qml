@@ -1,12 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
 
-FlaredRect {
+Rectangle {
     color: "#252324"
-    topLeft: "flare"
-    topRight: "square"
-    bottomLeft: "round"
-    bottomRight: "square"
 
     Text {
         anchors.centerIn: parent

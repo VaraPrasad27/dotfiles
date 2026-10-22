@@ -1,12 +1,8 @@
 import QtQuick
 import Quickshell
 
-FlaredRect {
+Rectangle {
     color: "#262324"
-    topLeft: "square"
-    topRight: "flare"
-    bottomLeft: "square"
-    bottomRight: "round"
 
     Text {
         anchors.centerIn: parent

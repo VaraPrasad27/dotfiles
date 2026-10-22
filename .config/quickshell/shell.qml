@@ -9,8 +9,9 @@ ShellRoot {
         id: root
 
         readonly property int barHeight: 30
+        readonly property int flareSize: 10
 
-        implicitHeight: barHeight
+        implicitHeight: barHeight + flareSize
         exclusiveZone: barHeight
         mask: Region {
             item: row
@@ -34,54 +35,57 @@ ShellRoot {
                 top: parent.top
                 left: parent.left
                 right: parent.right
-                bottom: parent.bottom
+                // bottom: parent.bottom
             }
             height: root.barHeight
             spacing: 3
 
-            StartMenu {
-                implicitHeight: root.implicitHeight
-                implicitWidth: root.implicitHeight
-                radius: root.implicitHeight / 2
-            }
+            FlaredRect {
+                Layout.fillHeight: true
+                implicitWidth: ri.implicitWidth + 3
+                topLeft: "square"
+                topRight: "flare"
+                bottomLeft: "flare"
+                bottomRight: "round"
 
-            Workspaces {
-                implicitHeight: root.implicitHeight - 2
-                radius: root.implicitHeight / 2
+                RowLayout {
+                    id: ri
+                    anchors.centerIn: parent
+                    spacing: 3
+                    StartMenu {
+                        implicitHeight: root.barHeight - 2
+                        implicitWidth: root.barHeight - 2
+                        radius: root.barHeight / 2
+                    }
+                    Workspaces {
+                        implicitHeight: root.barHeight - 2
+                        radius: root.barHeight / 2
+                    }
+                }
             }
 
             Active {
-                implicitHeight: root.implicitHeight - 2
-                radius: root.implicitHeight / 2
+                Layout.leftMargin: -8
+                implicitHeight: root.barHeight - 2
+                radius: root.barHeight / 2
                 color: "#252324"
             }
 
             Clock {
                 anchors.centerIn: parent
-                radius: root.implicitHeight / 2
+                radius: root.barHeight / 2
             }
 
             Item {
                 Layout.fillWidth: true
             }
 
-            SysTray {
-                id: trayBtn
-                implicitHeight: root.implicitHeight - 2
-                implicitWidth: root.implicitHeight - 2
-                radius: root.implicitHeight / 2
-                open: trayPop.visible
-                onClicked: {
-                    netPop.visible = false;
-                    trayPop.visible = !trayPop.visible;
-                }
-            }
-
             WrapperRectangle {
-                implicitHeight: root.implicitHeight - 2
+                Layout.rightMargin: -8
+                implicitHeight: root.barHeight - 2
                 leftMargin: 10
                 rightMargin: 10
-                radius: root.implicitHeight / 2
+                radius: root.barHeight / 2
                 color: "#252324"
                 RowLayout {
                     spacing: 9
@@ -99,10 +103,37 @@ ShellRoot {
                     Battery {}
                 }
             }
-            More {
-                implicitHeight: root.implicitHeight
-                implicitWidth: root.implicitHeight
-                radius: root.implicitHeight / 2
+
+            FlaredRect {
+                Layout.fillHeight: true
+                implicitWidth: li.implicitWidth + 3
+                topLeft: "flare"
+                topRight: "square"
+                bottomLeft: "round"
+                bottomRight: "flare"
+
+                RowLayout {
+                    id: li
+                    anchors.centerIn: parent
+                    spacing: 3
+                    SysTray {
+                        id: trayBtn
+                        implicitHeight: root.barHeight - 2
+                        implicitWidth: root.barHeight - 2
+                        radius: root.barHeight / 2
+                        open: trayPop.visible
+                        onClicked: {
+                            netPop.visible = false;
+                            trayPop.visible = !trayPop.visible;
+                        }
+                    }
+
+                    More {
+                        implicitHeight: root.barHeight - 2
+                        implicitWidth: root.barHeight - 2
+                        radius: root.barHeight / 2
+                    }
+                }
             }
         }
 
