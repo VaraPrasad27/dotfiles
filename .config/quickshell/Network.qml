@@ -37,21 +37,6 @@ Rectangle {
             }
         }
 
-        Text {
-            text: {
-                if (!Networking.wifiEnabled)
-                    return "off";
-                if (!root.active)
-                    return "Disconnected";
-
-                return root.active.name;
-            }
-            color: "#f5e2c5"
-            font {
-                family: "SF Pro Display"
-                weight: 500
-            }
-        }
         // 
         // 
     }

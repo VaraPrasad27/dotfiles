@@ -29,7 +29,7 @@ WrapperRectangle {
         }
         Text {
             text: root.level + "%"
-            color: "#f4e2c5"
+            color: "white"
             font.family: "SF Pro Display"
             font.weight: 500
         }

@@ -139,7 +139,6 @@ ShellRoot {
 
         NetPopup {
             id: netPop
-            anchor.window: root
             onVisibleChanged: root.syncGrab()
         }
 

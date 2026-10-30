@@ -1,14 +1,27 @@
 import QtQuick
 import QtQuick.Controls
 import Quickshell
+import Quickshell.Wayland
 import Quickshell.Networking
 
-PopupWindow {
+// A layer-shell window (not a PopupWindow) so it can receive keyboard focus
+// for the password field. Pinned to the top-right corner under the bar.
+PanelWindow {
     id: root
 
-    anchor.rect.x: anchor.window ? anchor.window.width : 0
-    anchor.rect.y: anchor.window ? anchor.window.height + 2 : 0
-    anchor.gravity: Edges.Bottom | Edges.Left
+    // distance from the top of the screen: bar window height + a small gap
+    property int topOffset: 32
+
+    anchors {
+        top: true
+        right: true
+    }
+    margins.top: topOffset
+    margins.right: 2
+    exclusionMode: ExclusionMode.Ignore
+    WlrLayershell.namespace: "quickshell:netpopup"
+
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand   // focus when clicked
 
     implicitWidth: 500
     implicitHeight: 500
@@ -16,6 +29,10 @@ PopupWindow {
     color: "transparent"
 
     property var wifiDevice: Networking.devices.values.find(d => d.type === DeviceType.Wifi)
+
+    // collapse any open row when the popup closes
+    onVisibleChanged: if (!visible)
+        list.expandedNetwork = null
 
     Binding {
         target: root.wifiDevice
@@ -37,27 +54,16 @@ PopupWindow {
             clip: true
             boundsBehavior: Flickable.StopAtBounds
 
+            // the network whose row is currently expanded (only one at a time)
+            property var expandedNetwork: null
+
             model: root.wifiDevice ? root.wifiDevice.networks : null
 
-            delegate: Rectangle {
-                required property var modelData
-
+            delegate: NetRow {
                 width: ListView.view.width
-                implicitHeight: label.implicitHeight + 16
-                radius: 10
-                color: "#2b2d3f"
-                border.width: 1
-                border.color: modelData.connected ? "#e89aa8" : "#3a3d52"
-
-                Text {
-                    id: label
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    anchors.leftMargin: 12
-                    text: parent.modelData.name
-                    color: "white"
-                    font.pointSize: 12
-                }
+                expanded: list.expandedNetwork === modelData
+                onToggled: list.expandedNetwork = expanded ? null : modelData
+                onCollapse: list.expandedNetwork = null
             }
 
             ScrollBar.vertical: ScrollBar {

@@ -19,6 +19,7 @@ WrapperRectangle {
         Text {
             text: root.icon
             font.family: "JetBrainsMono Nerd Font Propo"
+            font.pixelSize: 15
             color: "white"
         }
     }

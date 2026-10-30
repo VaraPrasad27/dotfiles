@@ -8,7 +8,7 @@ WrapperRectangle {
 
     RowLayout {
         id: root
-        spacing: 7
+        spacing: 5
 
         property var sink: Pipewire.defaultAudioSink
 
@@ -37,7 +37,7 @@ WrapperRectangle {
 
             font {
                 family: "JetBrainsMono Nerd Font Propo"
-                pixelSize: 13
+                pixelSize: 18
             }
         }
 
