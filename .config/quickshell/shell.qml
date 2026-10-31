@@ -89,13 +89,20 @@ ShellRoot {
                 color: "#252324"
                 RowLayout {
                     spacing: 9
-                    Bluetooth {}
+                    Bluetooth {
+                        onClicked: {
+                            netPop.visible = false;
+                            trayPop.visible = false;
+                            btPop.visible = !btPop.visible;
+                        }
+                    }
                     Volume {}
                     Network {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
                                 trayPop.visible = false;
+                                btPop.visible = false;
                                 netPop.visible = !netPop.visible;
                             }
                         }
@@ -124,6 +131,7 @@ ShellRoot {
                         open: trayPop.visible
                         onClicked: {
                             netPop.visible = false;
+                            btPop.visible = false;
                             trayPop.visible = !trayPop.visible;
                         }
                     }
@@ -151,25 +159,31 @@ ShellRoot {
                 root.syncGrab()
         }
 
+        BtPopup {
+            id: btPop
+            onVisibleChanged: root.syncGrab()
+        }
+
         HyprlandFocusGrab {
             id: grab
-            windows: [root, trayPop, netPop]   // clicks on any of these don't count as "outside"
+            windows: [root, trayPop, netPop, btPop]   // clicks on any of these don't count as "outside"
 
             onCleared: {
                 if (trayPop.openMenus > 0)     // a tray right-click menu is up, so leave things alone
                     return;
                 trayPop.visible = false;
                 netPop.visible = false;
+                btPop.visible = false;
             }
         }
         Timer {
             id: grabTimer
             interval: 50
-            onTriggered: grab.active = trayPop.visible || netPop.visible
+            onTriggered: grab.active = trayPop.visible || netPop.visible || btPop.visible
         }
 
         function syncGrab() {
-            if (trayPop.visible || netPop.visible) {
+            if (trayPop.visible || netPop.visible || btPop.visible) {
                 grabTimer.restart();     // give the popup's window time to exist
             } else {
                 grabTimer.stop();

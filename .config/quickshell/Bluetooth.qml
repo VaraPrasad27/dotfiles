@@ -1,26 +1,33 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Widgets
 import Quickshell.Bluetooth
 
-WrapperRectangle {
-    color: "#252324"
+// Bar indicator. Emits clicked() so the bar can toggle the Bluetooth popup.
+Item {
+    id: root
 
-    RowLayout {
-        id: root
-        readonly property string icon: {
+    signal clicked
+
+    Layout.fillHeight: true
+    implicitWidth: icon.implicitWidth
+    implicitHeight: icon.implicitHeight
+
+    Text {
+        id: icon
+        anchors.centerIn: parent
+        color: "white"
+        font.family: "JetBrainsMono Nerd Font Propo"
+        text: {
             if (!Bluetooth.defaultAdapter?.enabled)
-                return "󰂲";
+                return String.fromCodePoint(0xF00B2);   // off
             if (Bluetooth.devices.values.some(d => d.connected))
-                return "󰂱";
-            return "󰂯"; // enabled, nothing connected
+                return String.fromCodePoint(0xF00B1);   // connected
+            return String.fromCodePoint(0xF00AF);       // on, nothing connected
         }
+    }
 
-        Text {
-            text: root.icon
-            font.family: "JetBrainsMono Nerd Font Propo"
-            font.pixelSize: 15
-            color: "white"
-        }
+    MouseArea {
+        anchors.fill: parent
+        onClicked: root.clicked()
     }
 }
