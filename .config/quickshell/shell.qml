@@ -35,7 +35,6 @@ ShellRoot {
                 top: parent.top
                 left: parent.left
                 right: parent.right
-                // bottom: parent.bottom
             }
             height: root.barHeight
             spacing: 3
@@ -71,6 +70,8 @@ ShellRoot {
                 color: "#252324"
             }
 
+            MediaIsland {}
+
             Clock {
                 anchors.centerIn: parent
                 radius: root.barHeight / 2
@@ -89,10 +90,21 @@ ShellRoot {
                 color: "#252324"
                 RowLayout {
                     spacing: 9
+                    Clipboard {
+                        onClicked: {
+                            netPop.visible = false;
+                            trayPop.visible = false;
+                            btPop.visible = false;
+                            notifPop.visible = false;
+                            clipPop.visible = !clipPop.visible;
+                        }
+                    }
                     Bluetooth {
                         onClicked: {
                             netPop.visible = false;
                             trayPop.visible = false;
+                            clipPop.visible = false;
+                            notifPop.visible = false;
                             btPop.visible = !btPop.visible;
                         }
                     }
@@ -103,11 +115,23 @@ ShellRoot {
                             onClicked: {
                                 trayPop.visible = false;
                                 btPop.visible = false;
+                                clipPop.visible = false;
+                                notifPop.visible = false;
                                 netPop.visible = !netPop.visible;
                             }
                         }
                     }
                     Battery {}
+                    NotifButton {
+                        count: notifPop.count
+                        onClicked: {
+                            netPop.visible = false;
+                            trayPop.visible = false;
+                            btPop.visible = false;
+                            clipPop.visible = false;
+                            notifPop.visible = !notifPop.visible;
+                        }
+                    }
                 }
             }
 
@@ -132,11 +156,13 @@ ShellRoot {
                         onClicked: {
                             netPop.visible = false;
                             btPop.visible = false;
+                            clipPop.visible = false;
+                            notifPop.visible = false;
                             trayPop.visible = !trayPop.visible;
                         }
                     }
 
-                    More {
+                    ControlCenter {
                         implicitHeight: root.barHeight - 2
                         implicitWidth: root.barHeight - 2
                         radius: root.barHeight / 2
@@ -164,9 +190,21 @@ ShellRoot {
             onVisibleChanged: root.syncGrab()
         }
 
+        ControlPopup {
+            id: conPop
+        }
+        ClipboardPopup {
+            id: clipPop
+            onVisibleChanged: root.syncGrab()
+        }
+        NotificationPopup {
+            id: notifPop
+            onVisibleChanged: root.syncGrab()
+        }
+
         HyprlandFocusGrab {
             id: grab
-            windows: [root, trayPop, netPop, btPop]   // clicks on any of these don't count as "outside"
+            windows: [root, trayPop, netPop, btPop, clipPop, notifPop]   // clicks on any of these don't count as "outside"
 
             onCleared: {
                 if (trayPop.openMenus > 0)     // a tray right-click menu is up, so leave things alone
@@ -174,16 +212,18 @@ ShellRoot {
                 trayPop.visible = false;
                 netPop.visible = false;
                 btPop.visible = false;
+                clipPop.visible = false;
+                notifPop.visible = false;
             }
         }
         Timer {
             id: grabTimer
             interval: 50
-            onTriggered: grab.active = trayPop.visible || netPop.visible || btPop.visible
+            onTriggered: grab.active = trayPop.visible || netPop.visible || btPop.visible || clipPop.visible || notifPop.visible
         }
 
         function syncGrab() {
-            if (trayPop.visible || netPop.visible || btPop.visible) {
+            if (trayPop.visible || netPop.visible || btPop.visible || clipPop.visible || notifPop.visible) {
                 grabTimer.restart();     // give the popup's window time to exist
             } else {
                 grabTimer.stop();
