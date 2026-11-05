@@ -18,19 +18,27 @@ Rectangle {
                 id: item
                 required property var modelData
 
-                readonly property string iconName: DesktopEntries.heuristicLookup(modelData.appId)?.icon ?? modelData.appId
+                readonly property string appId: modelData.appId ?? ""
+
+                // reading `applications` makes this re-run once the desktop entries have
+                // finished loading (right after login they often aren't ready yet)
+                readonly property var entry: {
+                    DesktopEntries.applications.values.length;
+                    return DesktopEntries.heuristicLookup(appId);
+                }
 
                 implicitHeight: act1.implicitHeight
                 implicitWidth: act1.implicitHeight
                 radius: act1.implicitHeight / 2
                 color: modelData.activated ? "#45475a" : hover.containsMouse ? "#313244" : "transparent"
 
-                Image {
+                AppIcon {
                     anchors.centerIn: parent
-                    width: 22
-                    height: 22
-                    sourceSize: Qt.size(44, 44)
-                    source: Quickshell.iconPath(item.iconName, "application-x-executable")
+                    size: 22
+                    // the desktop entry's icon, then the window class as written, lower-cased,
+                    // and its last dotted part (org.mozilla.Thunderbird -> thunderbird)
+                    names: [item.entry?.icon, item.appId, item.appId.toLowerCase(), item.appId.split(".").pop().toLowerCase()]
+                    letter: item.entry?.name || item.appId
                 }
 
                 Rectangle {

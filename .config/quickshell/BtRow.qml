@@ -47,6 +47,28 @@ Rectangle {
 
     readonly property string toggleText: connecting ? "Connecting…" : disconnecting ? "Disconnecting…" : connected ? "Disconnect" : "Connect"
 
+    // shown instead of an icon when your theme has none for this kind of device
+    function deviceGlyph(icon) {
+        const i = icon ?? "";
+        if (i.includes("headset") || i.includes("headphone"))
+            return String.fromCodePoint(0xF02CB);   // headphones
+        if (i.includes("speaker") || i.includes("audio-card"))
+            return String.fromCodePoint(0xF04C3);   // speaker
+        if (i.includes("keyboard"))
+            return String.fromCodePoint(0xF030C);   // keyboard
+        if (i.includes("mouse") || i.includes("pointing"))
+            return String.fromCodePoint(0xF037D);   // mouse
+        if (i.includes("gaming"))
+            return String.fromCodePoint(0xF0297);   // gamepad
+        if (i.includes("phone"))
+            return String.fromCodePoint(0xF011C);   // cellphone
+        if (i.includes("computer") || i.includes("laptop"))
+            return String.fromCodePoint(0xF0322);   // laptop
+        if (i.includes("watch"))
+            return String.fromCodePoint(0xF0589);   // watch
+        return String.fromCodePoint(0xF00AF);       // bluetooth
+    }
+
     function toggleConnection() {
         if (connected)
             modelData.disconnect();
@@ -139,11 +161,12 @@ Rectangle {
             Layout.fillWidth: true
             spacing: 10
 
-            Image {
+            AppIcon {
                 Layout.preferredWidth: 22
                 Layout.preferredHeight: 22
-                sourceSize: Qt.size(44, 44)
-                source: Quickshell.iconPath(card.modelData.icon || "bluetooth", "bluetooth")
+                size: 22
+                names: [card.modelData.icon, "bluetooth"]
+                glyph: card.deviceGlyph(card.modelData.icon)
             }
 
             ColumnLayout {

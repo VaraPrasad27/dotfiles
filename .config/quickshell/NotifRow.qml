@@ -22,13 +22,12 @@ Rectangle {
     readonly property var defaultAction: actionList.find(a => a.identifier === "default")
     readonly property var extraActions: actionList.filter(a => a.identifier !== "default")
 
-    readonly property string iconSource: {
+    // an image sent with the notification wins, then an absolute icon path
+    readonly property string iconUrl: {
         if (modelData.image !== "")
             return modelData.image;
         const ic = modelData.appIcon;
-        if (ic.startsWith("/"))
-            return "file://" + ic;
-        return Quickshell.iconPath(ic !== "" ? ic : "dialog-information", "dialog-information");
+        return ic.startsWith("/") ? "file://" + ic : "";
     }
 
     function ago(t, now) {
@@ -82,13 +81,14 @@ Rectangle {
         }
         spacing: 12
 
-        Image {
+        AppIcon {
             Layout.alignment: Qt.AlignTop
             Layout.preferredWidth: 32
             Layout.preferredHeight: 32
-            sourceSize: Qt.size(64, 64)
-            fillMode: Image.PreserveAspectFit
-            source: card.iconSource
+            size: 32
+            url: card.iconUrl
+            names: [card.modelData.appIcon, card.modelData.desktopEntry, card.modelData.appName.toLowerCase()]
+            letter: card.modelData.appName
         }
 
         ColumnLayout {
