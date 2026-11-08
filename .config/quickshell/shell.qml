@@ -96,6 +96,7 @@ ShellRoot {
                             trayPop.visible = false;
                             btPop.visible = false;
                             notifPop.visible = false;
+                            controlPop.visible = false;
                             clipPop.visible = !clipPop.visible;
                         }
                     }
@@ -105,6 +106,7 @@ ShellRoot {
                             trayPop.visible = false;
                             clipPop.visible = false;
                             notifPop.visible = false;
+                            controlPop.visible = false;
                             btPop.visible = !btPop.visible;
                         }
                     }
@@ -117,6 +119,7 @@ ShellRoot {
                                 btPop.visible = false;
                                 clipPop.visible = false;
                                 notifPop.visible = false;
+                                controlPop.visible = false;
                                 netPop.visible = !netPop.visible;
                             }
                         }
@@ -129,6 +132,7 @@ ShellRoot {
                             trayPop.visible = false;
                             btPop.visible = false;
                             clipPop.visible = false;
+                            controlPop.visible = false;
                             notifPop.visible = !notifPop.visible;
                         }
                     }
@@ -158,6 +162,7 @@ ShellRoot {
                             btPop.visible = false;
                             clipPop.visible = false;
                             notifPop.visible = false;
+                            controlPop.visible = false;
                             trayPop.visible = !trayPop.visible;
                         }
                     }
@@ -166,6 +171,14 @@ ShellRoot {
                         implicitHeight: root.barHeight - 2
                         implicitWidth: root.barHeight - 2
                         radius: root.barHeight / 2
+                        onClicked: {
+                            netPop.visible = false;
+                            btPop.visible = false;
+                            clipPop.visible = false;
+                            notifPop.visible = false;
+                            trayPop.visible = false;
+                            controlPop.visible = !controlPop.visible;
+                        }
                     }
                 }
             }
@@ -201,10 +214,14 @@ ShellRoot {
             id: notifPop
             onVisibleChanged: root.syncGrab()
         }
+        ControlPopup {
+            id: controlPop
+            onVisibleChanged: root.syncGrab()
+        }
 
         HyprlandFocusGrab {
             id: grab
-            windows: [root, trayPop, netPop, btPop, clipPop, notifPop]   // clicks on any of these don't count as "outside"
+            windows: [root, trayPop, netPop, btPop, clipPop, notifPop, controlPop]   // clicks on any of these don't count as "outside"
 
             onCleared: {
                 if (trayPop.openMenus > 0)     // a tray right-click menu is up, so leave things alone
@@ -214,16 +231,17 @@ ShellRoot {
                 btPop.visible = false;
                 clipPop.visible = false;
                 notifPop.visible = false;
+                controlPop.visible = false;
             }
         }
         Timer {
             id: grabTimer
             interval: 50
-            onTriggered: grab.active = trayPop.visible || netPop.visible || btPop.visible || clipPop.visible || notifPop.visible
+            onTriggered: grab.active = trayPop.visible || netPop.visible || btPop.visible || clipPop.visible || notifPop.visible || controlPop
         }
 
         function syncGrab() {
-            if (trayPop.visible || netPop.visible || btPop.visible || clipPop.visible || notifPop.visible) {
+            if (trayPop.visible || netPop.visible || btPop.visible || clipPop.visible || notifPop.visible || controlPop) {
                 grabTimer.restart();     // give the popup's window time to exist
             } else {
                 grabTimer.stop();

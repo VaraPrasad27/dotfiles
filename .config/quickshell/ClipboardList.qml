@@ -51,14 +51,30 @@ Item {
         return out;
     }
 
-    // `cliphist decode` takes a line starting with the id, so the bare id is enough
+    // Both scripts get the entry id as $1 (passed as an argument, never spliced into the
+    // command). Errors are appended to $XDG_RUNTIME_DIR/qs-clipboard.log.
+    //
+    // cliphist wants a list-shaped line, "<id><TAB>...": released versions reject a bare
+    // "<id>\n". And an empty decode must never reach wl-copy, or it would clear the clipboard.
+    readonly property string pickScript: 'log="${XDG_RUNTIME_DIR:-/tmp}/qs-clipboard.log"\n'
+        + 'f=$(mktemp) || exit 1\n'
+        + 'if printf \'%s\\t\\n\' "$1" | cliphist decode > "$f" 2>>"$log" && [ -s "$f" ]; then\n'
+        + '  wl-copy < "$f" > /dev/null 2>>"$log"\n'
+        + 'else\n'
+        + '  echo "$(date +%T) decode failed for id $1, clipboard left untouched" >> "$log"\n'
+        + 'fi\n'
+        + 'rm -f "$f"'
+
+    readonly property string deleteScript: 'log="${XDG_RUNTIME_DIR:-/tmp}/qs-clipboard.log"\n'
+        + 'printf \'%s\\t\\n\' "$1" | cliphist delete 2>>"$log"'
+
     function pick(entry) {
-        Quickshell.execDetached(["sh", "-c", "printf '%s\\n' \"$1\" | cliphist decode | wl-copy", "sh", entry.id]);
+        Quickshell.execDetached(["sh", "-c", pickScript, "sh", entry.id]);
         closeRequested();
     }
 
     function remove(entry) {
-        Quickshell.execDetached(["sh", "-c", "printf '%s\\n' \"$1\" | cliphist delete", "sh", entry.id]);
+        Quickshell.execDetached(["sh", "-c", deleteScript, "sh", entry.id]);
         entries = entries.filter(e => e.id !== entry.id);
     }
 
